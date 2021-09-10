@@ -81,7 +81,7 @@ if ($this->ion_auth->in_group('Doctor')) {
 
                     <div class="form-group col-md-4">
                         <label for="exampleInputEmail1"><?php echo lang('date'); ?></label>
-                        <input type="text" class="form-control form-control-inline input-medium default-date-picker" name="date" id="exampleInputEmail1" value='' placeholder="">
+                        <input type="text" class="form-control form-control-inline input-medium default-date-picker" name="p_date" id="exampleInputEmail1" value='' placeholder="">
                     </div>
                     <div class="form-group col-md-4">
                         <label for="exampleInputEmail1"><?php echo lang('doctor'); ?></label>
@@ -148,7 +148,7 @@ if ($this->ion_auth->in_group('Doctor')) {
                 <form role="form" id="prescriptionEditForm" class="clearfix" action="prescription/addNewPrescription" method="post" enctype="multipart/form-data">
                     <div class="form-group col-md-4">
                         <label for="exampleInputEmail1"><?php echo lang('date'); ?></label>
-                        <input type="text" class="form-control form-control-inline input-medium default-date-picker" name="date" id="exampleInputEmail1" value='' placeholder="">
+                        <input type="text" class="form-control form-control-inline input-medium default-date-picker" name="p_date" id="exampleInputEmail1" value='' placeholder="">
                     </div>
                     <div class="form-group col-md-4">
                         <label for="exampleInputEmail1"><?php echo lang('doctor'); ?></label>
@@ -231,12 +231,12 @@ if ($this->ion_auth->in_group('Doctor')) {
                                                     dataType: 'json',
                                                 }).success(function (response) {
 
-                                                    var de = response.prescription.date * 1000;
+                                                    var de = response.prescription.p_date * 1000;
                                                     var d = new Date(de);
                                                     var da = (d.getDate() + 1) + '-' + (d.getMonth() + 1) + '-' + d.getFullYear();
                                                     // Populate the form fields with the data returned from server
                                                     $('#prescriptionEditForm').find('[name="id"]').val(response.prescription.id).end()
-                                                    $('#prescriptionEditForm').find('[name="date"]').val(da).end()
+                                                    $('#prescriptionEditForm').find('[name="p_date"]').val(da).end()
                                                     $('#prescriptionEditForm').find('[name="patient"]').val(response.prescription.patient).end()
                                                     $('#prescriptionEditForm').find('[name="doctor"]').val(response.prescription.doctor).end()
                                                     $('#prescriptionEditForm').find('[name="doctor"]').val(response.prescription.doctor).end()
@@ -274,17 +274,13 @@ if ($this->ion_auth->in_group('Doctor')) {
             dom: "<'row'<'col-sm-3'l><'col-sm-5 text-center'B><'col-sm-4'f>>" +
                     "<'row'<'col-sm-12'tr>>" +
                     "<'row'<'col-sm-5'i><'col-sm-7'p>>",
-            buttons: [
-                'copyHtml5',
-                'excelHtml5',
-                'csvHtml5',
-                'pdfHtml5',
-                {
-                    extend: 'print',
-                    exportOptions: {
-                        columns: [0, 1, 2,3,4],
-                    }
-                },
+         
+             buttons: [
+                {extend: 'copyHtml5', exportOptions: {columns: [0, 1, 2,3,4], }},
+                {extend: 'excelHtml5', exportOptions: {columns: [0, 1, 2,3,4], }},
+                {extend: 'csvHtml5', exportOptions: {columns: [0, 1, 2,3,4], }},
+                {extend: 'pdfHtml5', exportOptions: {columns: [0, 1, 2,3,4], }},
+                {extend: 'print', exportOptions: {columns: [0, 1, 2,3,4], }},
             ],
             aLengthMenu: [
                 [10, 25, 50, 100, -1],

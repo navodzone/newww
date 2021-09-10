@@ -5,6 +5,7 @@
         <?php
         $doctor = $this->doctor_model->getDoctorById($prescription->doctor);
         $patient = $this->patient_model->getPatientById($prescription->patient);
+        $appointment = $this->appointment_model->getAppointmentById($prescription->appointment);
         ?>
 
         <div class="col-md-8 panel bg_container margin_top" id="prescription">
@@ -35,7 +36,7 @@
                 <hr>
                 <div class="panel-body">
                     <div class="">
-                        <h5 class="col-md-4 prescription"><?php echo lang('date'); ?> : <?php echo date('d-m-Y', $prescription->date); ?></h5>
+                        <h5 class="col-md-4 prescription"><?php echo lang('date'); ?> : <?php echo date('d-m-Y', $prescription->p_date); ?></h5>
                         <h5 class="col-md-3 prescription"><?php echo lang('prescription'); ?> <?php echo lang('id'); ?> : <?php echo $prescription->id; ?></h5>
                     </div>
                 </div>
@@ -56,12 +57,16 @@
                             ?></h5>
                         <h5 class="col-md-3 patient"><?php echo lang('age'); ?>: 
                             <?php
+                            if ($patient->age == '') {
                             if (!empty($patient)) {
                                 $birthDate = strtotime($patient->birthdate);
                                 $birthDate = date('m/d/Y', $birthDate);
                                 $birthDate = explode("/", $birthDate);
                                 $age = (date("md", date("U", mktime(0, 0, 0, $birthDate[0], $birthDate[1], $birthDate[2]))) > date("md") ? ((date("Y") - $birthDate[2]) - 1) : (date("Y") - $birthDate[2]));
                                 echo $age . ' Year(s)';
+                            }
+                            }else{
+                                echo $patient->age . ' ' .'Year(s)';
                             }
                             ?>
                         </h5>
@@ -83,14 +88,7 @@
                             </div>
                         </div>
 
-                        <hr>
-
-                        <div class="panel-body">
-                            <div class="pull-left">
-                                <h5><strong><?php echo lang('note'); ?>:</strong> <br> <br> <?php echo $prescription->note; ?></h5>
-                            </div>
-                        </div>
-
+                     
 
 
 
@@ -101,9 +99,40 @@
                                 <h5><strong><?php echo lang('advice'); ?>: </strong> <br> <br> <?php echo $prescription->advice; ?></h5>
                             </div>
                         </div>
+                        <hr>
+                       
+<?php if ($prescription->appointment != 0) { ?>
+                        <hr>
+                        <div class="panel-body">
+                            <div class="pull-left">
+                                <h5><strong><?php echo lang('remarks'); ?>: </strong> <br> <br>
+                            
+                               <?php echo $appointment->remarks; ?>
+                             </h5>
+                            </div>
+                        </div> 
+                            
+                        <hr> 
+
+                        <div class="panel-body">
+                            <div class="pull-left">
+                                <h5><strong><?php echo lang('next_appointment_date'); ?>: </strong> <br> <br> <?php
+                            if (!empty($appointment)) {
+                                echo date('d-m-Y', $appointment->date);
+                            }
+                            ?> <br><br><?php
+                            if (!empty($appointment)) {
+                                echo $appointment->time_slot;
+                            }
+                            ?><br>
 
 
+                                </h5>
+                            </div>
+                        </div>
 
+<?php     }
+                            ?>
 
                     </div>
 
@@ -129,7 +158,7 @@
                                         foreach ($medicine as $key => $value) {
                                             ?>
                                             <tr>
-                                                <?php $single_medicine = explode('***', $value); ?>
+        <?php $single_medicine = explode('***', $value); ?>
 
                                                 <td class=""><?php echo $this->medicine_model->getMedicineById($single_medicine[0])->name . ' - ' . $single_medicine[1]; ?> </td>
                                                 <td class=""><?php echo $single_medicine[3] . ' - ' . $single_medicine[4]; ?> </td>
@@ -140,7 +169,7 @@
                                         ?>
                                     </tbody>
                                 </table>
-                            <?php } ?>
+<?php } ?>
                         </div>
 
 
@@ -195,23 +224,23 @@
                     </div>
                 </div>
                 <div class="panel_button clearfix">
-                    <?php if ($this->ion_auth->in_group(array('admin'))) { ?>
+<?php if ($this->ion_auth->in_group(array('admin'))) { ?>
                         <div class="text-center invoice-btn no-print pull-left">
                             <a class="btn btn-info btn-lg info" href='prescription/all'><i class="fa fa-medkit"></i> <?php echo lang('all'); ?> <?php echo lang('prescription'); ?> </a>
                         </div>
-                    <?php } ?>
-                    <?php if ($this->ion_auth->in_group(array('Doctor'))) { ?>
+<?php } ?>
+<?php if ($this->ion_auth->in_group(array('Doctor'))) { ?>
                         <div class="text-center invoice-btn no-print pull-left">
                             <a class="btn btn-info btn-lg info" href='prescription'><i class="fa fa-medkit"></i> <?php echo lang('all'); ?> <?php echo lang('prescriptions'); ?> </a>
                         </div>
                     <?php } ?>
                 </div>
                 <div class="panel_button">
-                    <?php if ($this->ion_auth->in_group(array('admin', 'Doctor'))) { ?>
+<?php if ($this->ion_auth->in_group(array('admin', 'Doctor'))) { ?>
                         <div class="text-center invoice-btn no-print pull-left">
                             <a class="btn btn-info btn-lg green" href="prescription/addPrescriptionView"><i class="fa fa-plus-circle"></i> <?php echo lang('add_prescription'); ?> </a>
                         </div>
-                    <?php } ?>
+<?php } ?>
                 </div>
             </div>
         </section>

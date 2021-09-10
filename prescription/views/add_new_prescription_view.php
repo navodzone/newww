@@ -22,6 +22,7 @@ if ($this->ion_auth->in_group('Doctor')) {
                 else
                     echo lang('add_prescription');
                 ?>
+
             </header>
             <div class="panel col-md-12">
                 <div class="adv-table editable-table ">
@@ -31,14 +32,14 @@ if ($this->ion_auth->in_group('Doctor')) {
                             <div class="">
                                 <div class="form-group col-md-4">
                                     <label for="exampleInputEmail1"> <?php echo lang('date'); ?></label>
-                                    <input type="text" class="form-control default-date-picker" name="date" id="exampleInputEmail1" value='<?php
-                                    if (!empty($setval)) {
-                                        echo set_value('date');
-                                    }
-                                    if (!empty($prescription->date)) {
-                                        echo date('d-m-Y', $prescription->date);
-                                    }
-                                    ?>' placeholder="" readonly="">
+                                    <input type="text" class="form-control default-date-picker" name="p_date" id="exampleInputEmail1" value='<?php
+                        if (!empty($setval)) {
+                            echo set_value('p_date');
+                        }
+                        if (!empty($prescription->p_date)) {
+                            echo date('d-m-Y', $prescription->p_date);
+                        }
+                        ?>' placeholder="" readonly="">
                                 </div>
                                 <div class="form-group col-md-4">
                                     <label for="exampleInputEmail1"> <?php echo lang('patient'); ?></label>
@@ -55,10 +56,11 @@ if ($this->ion_auth->in_group('Doctor')) {
                                         ?>
                                     </select>
                                 </div>
+
                                 <?php if (!$this->ion_auth->in_group('Doctor')) { ?>
                                     <div class="form-group col-md-4"> 
                                         <label for="exampleInputEmail1"> <?php echo lang('doctor'); ?></label>
-                                        <select class="form-control m-bot15" id="doctorchoose" name="doctor" value=''>
+                                        <select class="form-control m-bot15" id="adoctors" name="doctor" value=''>
                                             <?php if (!empty($prescription->doctor)) { ?>
                                                 <option value="<?php echo $doctors->id; ?>" selected="selected"><?php echo $doctors->name; ?> - (<?php echo lang('id'); ?> : <?php echo $doctors->id; ?>)</option>  
                                             <?php } ?>
@@ -75,11 +77,11 @@ if ($this->ion_auth->in_group('Doctor')) {
                                     <div class="form-group col-md-4"> 
                                         <label for="exampleInputEmail1"> <?php echo lang('doctor'); ?></label>
                                         <?php if (!empty($prescription->doctor)) { ?>
-                                            <select class="form-control m-bot15" name="doctor" value=''>
+                                            <select class="form-control m-bot15" id="adoctors" name="doctor" value=''>
                                                 <option value="<?php echo $doctors->id; ?>" selected="selected"><?php echo $doctors->name; ?> - (<?php echo lang('id'); ?> : <?php echo $doctors->id; ?>)</option>  
                                             </select>
                                         <?php } else { ?>
-                                            <select class="form-control m-bot15" id="doctorchoose1" name="doctor" value=''>
+                                            <select class="form-control m-bot15" id="adoctors" name="doctor" value=''>
                                                 <?php if (!empty($prescription->doctor)) { ?>
                                                     <option value="<?php echo $doctors->id; ?>" selected="selected"><?php echo $doctors->name; ?> - (<?php echo lang('id'); ?> : <?php echo $doctors->id; ?>)</option>  
                                                 <?php } ?>
@@ -98,34 +100,101 @@ if ($this->ion_auth->in_group('Doctor')) {
 
 
 
-                                    </div>
+                                    </div> 
                                 <?php } ?>
+                                <div class="form-group col-md-6">
+                                    <label for="exampleInputEmail1"> <?php echo lang('next_appointment_date'); ?></label>
+                                    <input type="text" class="form-control default-date-picker" name="date" id="date" value='<?php
+                                if (!empty($setval)) {
+                                    echo set_value('date');
+                                }
+                                if (!empty($prescription->appointment)) {
+                                    echo date('d-m-Y', $appointments->date);
+                                }
+                                ?>' placeholder="" readonly="">
+                                </div>
+
+                            
 
                                 <div class="form-group col-md-6">
+                                    <label for="exampleInputEmail1"> <?php echo lang('available_slots'); ?></label>
+                                    <select class="form-control m-bot15" name="time_slot" id="aslots" value=''> 
+
+                                    </select>
+                                </div>
+                                
+                                <div class="form-group col-md-6">
+                       
+                            <label for="exampleInputEmail1"> <?php echo lang('remarks'); ?></label>
+                     
+                            <select class="form-control js-example-basic-single" name="remarks" value=''>
+                                <?php foreach ($categories as $category) { ?>
+                                    <option value="<?php echo $category->category; ?>" <?php
+                                    if (!empty($prescription->appointment)) {
+                                        if ($category->category == $appointments->remarks) {
+                                            echo 'selected';
+                                        }
+                                    }
+                                    ?>> <?php echo $category->category; ?> </option>
+                                        <?php } ?>
+                            </select>
+                        
+                    </div>
+
+
+                   <div class="form-group col-md-6">
+                      
+                            <label for="exampleInputEmail1"> <?php echo lang('appointment'); ?> <?php echo lang('status'); ?></label>
+                   
+                            <select class="form-control m-bot15" name="status" value=''>
+                                <option value="Pending Confirmation" <?php
+                                if (!empty($prescription->appointment)) {
+                                    if ($appointments->status == 'Pending Confirmation') {
+                                        echo 'selected';
+                                    }
+                                }
+                                ?> > <?php echo lang('pending_confirmation'); ?> </option> 
+                                <option value="Confirmed" <?php
+                                if (!empty($prescription->appointment)) {
+                                    if ($appointments->status == 'Confirmed') {
+                                        echo 'selected';
+                                    }
+                                }
+                                ?> > <?php echo lang('confirmed'); ?> </option>
+                                <option value="Treated" <?php
+                                if (!empty($prescription->appointment)) {
+                                    if ($appointments->status == 'Treated') {
+                                        echo 'selected';
+                                    }
+                                }
+                                ?> > <?php echo lang('treated'); ?> </option>
+                                <option value="cancelled" <?php
+                                if (!empty($prescription->appointment)) {
+                                    if ($appointments->status == 'Treated') {
+                                        echo 'selected';
+                                    }
+                                }
+                                ?> > <?php echo lang('cancelled'); ?> </option>
+                            </select>
+        
+                    </div>
+
+                                
+                                
+                                <div class="form-group col-md-12">
                                     <label class="control-label"><?php echo lang('history'); ?></label>
                                     <textarea class="form-control ckeditor" id="editor1" name="symptom" value="" rows="50" cols="20"><?php
-                                        if (!empty($setval)) {
-                                            echo set_value('symptom');
-                                        }
-                                        if (!empty($prescription->symptom)) {
-                                            echo $prescription->symptom;
-                                        }
-                                        ?></textarea>
+                                    if (!empty($setval)) {
+                                        echo set_value('symptom');
+                                    }
+                                    if (!empty($prescription->symptom)) {
+                                        echo $prescription->symptom;
+                                    }
+                                ?></textarea>
                                 </div>
 
 
 
-                                <div class="form-group col-md-6">
-                                    <label class="control-label"><?php echo lang('note'); ?></label>
-                                    <textarea class="form-control ckeditor" id="editor3" name="note" value="" rows="30" cols="20"><?php
-                                        if (!empty($setval)) {
-                                            echo set_value('note');
-                                        }
-                                        if (!empty($prescription->note)) {
-                                            echo $prescription->note;
-                                        }
-                                        ?></textarea>
-                                </div>
 
                                 <div class="form-group col-md-12 medicine_block">
                                     <label class="control-label col-md-3"> <?php echo lang('medicine'); ?></label>
@@ -159,8 +228,8 @@ if ($this->ion_auth->in_group('Doctor')) {
                                 </div>
 
                                 <div class="form-group col-md-12 panel-body medicine_block">
-                                    <label class="control-label col-md-3"><?php echo lang('medicine'); ?></label>
-                                    <div class="col-md-9 medicine pull-right">
+                                    <label class="control-label col-md-12"><?php echo lang('medicine'); ?></label>
+                                    <div class="col-md-12 medicine pull-right">
 
                                     </div>
 
@@ -185,11 +254,17 @@ if ($this->ion_auth->in_group('Doctor')) {
 
                                 <input type="hidden" name="admin" value='admin'>
 
-                                <input type="hidden" name="id" value='<?php
-                                if (!empty($prescription->id)) {
-                                    echo $prescription->id;
+                                <input type="hidden" name="id" id="prescription_id" value='<?php
+                                        if (!empty($prescription->id)) {
+                                            echo $prescription->id;
+                                        }
+                                        ?>'>
+                                <input type="hidden" name="appointment" id="appointment_id" value='<?php
+                                if (!empty($prescription->appointment)) {
+                                    echo $prescription->appointment;
                                 }
-                                ?>'>
+                                        ?>'>
+                                
 
                                 <div class="form-group">
                                     <button type="submit" name="submit" class="btn btn-info pull-right"> <?php echo lang('submit'); ?></button>
@@ -242,6 +317,14 @@ if ($this->ion_auth->in_group('Doctor')) {
     .medicine_block{
         background: #f1f2f7;
         padding: 50px !important;
+    }
+
+    form input{
+        text-align: left;
+    }
+
+    .medi_div{
+        float: left !important;
     }
 
 
@@ -479,7 +562,7 @@ if ($this->ion_auth->in_group('Doctor')) {
             }
 
         });
-        $("#doctorchoose").select2({
+        $("#adoctors").select2({
             placeholder: '<?php echo lang('select_doctor'); ?>',
             allowClear: true,
             ajax: {
@@ -501,28 +584,7 @@ if ($this->ion_auth->in_group('Doctor')) {
             }
 
         });
-        $("#doctorchoose1").select2({
-            placeholder: '<?php echo lang('select_doctor'); ?>',
-            allowClear: true,
-            ajax: {
-                url: 'doctor/getDoctorInfo',
-                type: "post",
-                dataType: 'json',
-                delay: 250,
-                data: function (params) {
-                    return {
-                        searchTerm: params.term // search term
-                    };
-                },
-                processResults: function (response) {
-                    return {
-                        results: response
-                    };
-                },
-                cache: true
-            }
 
-        });
 
 
 
@@ -595,3 +657,265 @@ if ($this->ion_auth->in_group('Doctor')) {
 
         });
     });</script>
+<?php
+/*$opu = $this->appointment_model->getAppointmentById($prescription->appointment)->id;
+
+if (!empty($prescription->appointment)) {
+    $appp = $appointments->id;
+}*/
+?>
+<?php if (!empty($prescription->appointment)) { ?>
+    
+     <script type="text/javascript">
+           $(document).ready(function () {
+             var date = $('#date').val();
+                var doctorr = $('#adoctors').val();
+                var appointment_id = $('#appointment_id').val();
+                // $('#default').trigger("reset");
+                $.ajax({
+                    url: 'schedule/getAvailableSlotByDoctorByDateByAppointmentIdByJason?date=' + date + '&doctor=' + doctorr + '&appointment_id=' + appointment_id,
+                    method: 'GET',
+                    data: '',
+                    dataType: 'json',
+                }).success(function (response) {
+                    $('#aslots1').find('option').remove();
+                    var slots = response.aslots;
+                    $.each(slots, function (key, value) {
+                        $('#aslots').append($('<option>').text(value).val(value)).end();
+                    });
+
+                    $("#aslots").val(response.current_value)
+                            .find("option[value=" + response.current_value + "]").attr('selected', true);
+                    //  $('#aslots1 option[value=' + response.current_value + ']').attr("selected", "selected");
+                    //   $("#default-step-1 .button-next").trigger("click");
+                    if ($('#aslots').has('option').length == 0) {                    //if it is blank. 
+                        $('#aslots').append($('<option>').text('No Further Time Slots').val('Not Selected')).end();
+                    }
+                    // Populate the form fields with the data returned from server
+                    //  $('#default').find('[name="staff"]').val(response.appointment.staff).end()
+                });
+                });
+         </script>
+  <?php  
+}
+?>
+
+
+<?php 
+//$opu = $this->appointment_model->getAppointmentById($prescription->appointment)->id;
+//if (!empty($opu)) { ?>
+
+  <!--  <script type="text/javascript">
+        $(document).ready(function () {
+            $("#adoctors").change(function () {
+                // Get the record's ID via attribute  
+                var id = $('#prescription_id').val();
+                var date = $('#date').val();
+                var doctorr = $('#adoctors').val();
+                $('#aslots').find('option').remove();
+                // $('#default').trigger("reset");
+                $.ajax({
+                    url: 'schedule/getAvailableSlotByDoctorByDateByAppointmentIdByJason?date=' + date + '&doctor=' + doctorr + '&prescription_id=' + id,
+                    method: 'GET',
+                    data: '',
+                    dataType: 'json',
+                }).success(function (response) {
+                    var slots = response.aslots;
+                    $.each(slots, function (key, value) {
+                        $('#aslots').append($('<option>').text(value).val(value)).end();
+                    });
+                    //   $("#default-step-1 .button-next").trigger("click");
+                    if ($('#aslots').has('option').length == 0) {                    //if it is blank. 
+                        $('#aslots').append($('<option>').text('No Further Time Slots').val('Not Selected')).end();
+                    }
+                    // Populate the form fields with the data returned from server
+                    //  $('#default').find('[name="staff"]').val(response.appointment.staff).end()
+                });
+            });
+
+        });
+
+        $(document).ready(function () {
+            var id = $('#prescription_id').val();
+            var date = $('#date').val();
+            var doctorr = $('#adoctors').val();
+            $('#aslots').find('option').remove();
+            // $('#default').trigger("reset");
+            $.ajax({
+                url: 'schedule/getAvailableSlotByDoctorByDateByAppointmentIdByJason?date=' + date + '&doctor=' + doctorr + '&prescription_id=' + id,
+                method: 'GET',
+                data: '',
+                dataType: 'json',
+            }).success(function (response) {
+                var slots = response.aslots;
+                $.each(slots, function (key, value) {
+                    $('#aslots').append($('<option>').text(value).val(value)).end();
+                });
+
+                $("#aslots").val(response.current_value)
+                        .find("option[value=" + response.current_value + "]").attr('selected', true);
+
+                //   $("#default-step-1 .button-next").trigger("click");
+                if ($('#aslots').has('option').length == 0) {                    //if it is blank. 
+                    $('#aslots').append($('<option>').text('No Further Time Slots').val('Not Selected')).end();
+                }
+                // Populate the form fields with the data returned from server
+                //  $('#default').find('[name="staff"]').val(response.appointment.staff).end()
+            });
+
+        });
+
+
+
+
+        $(document).ready(function () {
+            $('#date').datepicker({
+                format: "dd-mm-yyyy",
+                autoclose: true,
+            })
+                    //Listen for the change even on the input
+                    .change(dateChanged)
+                    .on('changeDate', dateChanged);
+        });
+
+        function dateChanged() {
+            // Get the record's ID via attribute  
+            var id = $('#prescription_id').val();
+            var date = $('#date').val();
+            var doctorr = $('#adoctors').val();
+            $('#aslots').find('option').remove();
+            // $('#default').trigger("reset");
+            $.ajax({
+                url: 'schedule/getAvailableSlotByDoctorByDateByAppointmentIdByJason?date=' + date + '&doctor=' + doctorr + '&prescription_id=' + id,
+                method: 'GET',
+                data: '',
+                dataType: 'json',
+            }).success(function (response) {
+                var slots = response.aslots;
+                $.each(slots, function (key, value) {
+                    $('#aslots').append($('<option>').text(value).val(value)).end();
+                });
+                //   $("#default-step-1 .button-next").trigger("click");
+                if ($('#aslots').has('option').length == 0) {                    //if it is blank. 
+                    $('#aslots').append($('<option>').text('No Further Time Slots').val('Not Selected')).end();
+                }
+
+
+                // Populate the form fields with the data returned from server
+                //  $('#default').find('[name="staff"]').val(response.appointment.staff).end()
+            });
+
+        }
+
+
+
+
+    </script> -->
+
+<?php //} else { ?> 
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("#adoctors").change(function () {
+                // Get the record's ID via attribute  
+                var id = $('#prescription_id').val();
+                var date = $('#date').val();
+                var doctorr = $('#adoctors').val();
+                $('#aslots').find('option').remove();
+                // $('#default').trigger("reset");
+                $.ajax({
+                    url: 'schedule/getAvailableSlotByDoctorByDateByJason?date=' + date + '&doctor=' + doctorr,
+                    method: 'GET',
+                    data: '',
+                    dataType: 'json',
+                }).success(function (response) {
+                    var slots = response.aslots;
+                    $.each(slots, function (key, value) {
+                        $('#aslots').append($('<option>').text(value).val(value)).end();
+                    });
+                    //   $("#default-step-1 .button-next").trigger("click");
+                    if ($('#aslots').has('option').length == 0) {                    //if it is blank. 
+                        $('#aslots').append($('<option>').text('No Further Time Slots').val('Not Selected')).end();
+                    }
+                    // Populate the form fields with the data returned from server
+                    //  $('#default').find('[name="staff"]').val(response.appointment.staff).end()
+                });
+            });
+
+        });
+
+        $(document).ready(function () {
+            var id = $('#prescription_id').val();
+            var date = $('#date').val();
+            var doctorr = $('#adoctors').val();
+            $('#aslots').find('option').remove();
+            // $('#default').trigger("reset");
+            $.ajax({
+                url: 'schedule/getAvailableSlotByDoctorByDateByJason?date=' + date + '&doctor=' + doctorr,
+                method: 'GET',
+                data: '',
+                dataType: 'json',
+            }).success(function (response) {
+                var slots = response.aslots;
+                $.each(slots, function (key, value) {
+                    $('#aslots').append($('<option>').text(value).val(value)).end();
+                });
+
+                $("#aslots").val(response.current_value)
+                        .find("option[value=" + response.current_value + "]").attr('selected', true);
+
+                //   $("#default-step-1 .button-next").trigger("click");
+                if ($('#aslots').has('option').length == 0) {                    //if it is blank. 
+                    $('#aslots').append($('<option>').text('No Further Time Slots').val('Not Selected')).end();
+                }
+                // Populate the form fields with the data returned from server
+                //  $('#default').find('[name="staff"]').val(response.appointment.staff).end()
+            });
+
+        });
+
+
+
+
+        $(document).ready(function () {
+            $('#date').datepicker({
+                format: "dd-mm-yyyy",
+                autoclose: true,
+            })
+                    //Listen for the change even on the input
+                    .change(dateChanged)
+                    .on('changeDate', dateChanged);
+        });
+
+        function dateChanged() {
+            // Get the record's ID via attribute  
+            var id = $('#prescription_id').val();
+            var date = $('#date').val();
+            var doctorr = $('#adoctors').val();
+            $('#aslots').find('option').remove();
+            // $('#default').trigger("reset");
+            $.ajax({
+                url: 'schedule/getAvailableSlotByDoctorByDateByJason?date=' + date + '&doctor=' + doctorr,
+                method: 'GET',
+                data: '',
+                dataType: 'json',
+            }).success(function (response) {
+                var slots = response.aslots;
+                $.each(slots, function (key, value) {
+                    $('#aslots').append($('<option>').text(value).val(value)).end();
+                });
+                //   $("#default-step-1 .button-next").trigger("click");
+                if ($('#aslots').has('option').length == 0) {                    //if it is blank. 
+                    $('#aslots').append($('<option>').text('No Further Time Slots').val('Not Selected')).end();
+                }
+
+
+                // Populate the form fields with the data returned from server
+                //  $('#default').find('[name="staff"]').val(response.appointment.staff).end()
+            });
+
+        }
+
+    </script>
+
+<?php// } ?>

@@ -420,8 +420,8 @@
                                         <label class="control-label"><?php echo lang('date'); ?>  </label>
                                         <span style="text-transform: uppercase;"> : 
                                             <?php
-                                            if (!empty($prescription->date)) {
-                                                echo date('d-m-Y', $prescription->date) . ' <br>';
+                                            if (!empty($prescription->p_date)) {
+                                                echo date('d-m-Y', $prescription->p_date) . ' <br>';
                                             }
                                             ?>
                                         </span>
